@@ -31,11 +31,21 @@ const modelOptions = {
 const UserModel = db.define('user', modelDefinition, modelOptions);
 
 function comparePasswords(password, callback){
+    bcrypt.compare(password, this.password, function(error, isMatch) {
+        if(error) {
+            return callback(error);
+        }
 
+        return callback(null, isMatch);
+    });
 }
 
-function hashPassword(password, callback){
-
+function hashPassword(user){
+    if(user.changed('password')) {
+        return bcrypt.hash(user.password, 10).then(function(password) {
+            user.password = password;
+        });
+    }
 }
 
 module.exports = UserModel
