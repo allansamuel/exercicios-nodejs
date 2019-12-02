@@ -1,6 +1,6 @@
 'use strict'
 
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize'),
       bcrypt = require('bcrypt-nodejs')
 
 const config = require('../config'),
