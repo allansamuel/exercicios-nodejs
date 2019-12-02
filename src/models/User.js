@@ -15,7 +15,8 @@ const modelDefinition = {
     },
     password: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        select: false
     }
 }
     

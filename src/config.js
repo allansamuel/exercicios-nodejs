@@ -13,5 +13,5 @@ config.db.details = {
 }
 
 config.keys = {
-    secret: '/jVdfUX+u/Kn3qPY4+ahjwQgyV5UhkM5cdh1i2xhozE='
+    secret: 'ugiugijnijmookppokjVdfUX+u/Kn3qPY4+ahjwQgyV5U'
 }
