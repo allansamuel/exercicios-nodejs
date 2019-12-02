@@ -1,7 +1,7 @@
 'use strict'
 
 const Sequelize = require('sequelize'),
-      bcrypt = require('bcrypt-nodejs')
+      bcrypt = require('bcryptjs')
 
 const config = require('../config'),
       db = require('../services/database')
