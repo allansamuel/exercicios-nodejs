@@ -19,6 +19,8 @@ hookJWTStrategy(passport)
 
 /* app.use(express.static(__dirname + '../../public')); */
 
+require('./controllers/authController')(app)
+
 app.get('/', (req, res) => {
     res.send('ok')
 })
