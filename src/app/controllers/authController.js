@@ -64,6 +64,7 @@ router.post('/authenticate', async (req,res) => {
     })
 })
 
+//rota de envio de email com token para mudança de senha
 router.post('/forgot_password', async (req, res) => {
     const {email} = req.body.user
 
@@ -108,4 +109,37 @@ router.post('/forgot_password', async (req, res) => {
     }
 })
 
+//troca efetiva de senha através do token de confirmação
+router.post('/reset_password', async (req, res) => {
+    const {email, token, password} = req.body.user
+    
+    try{
+        const user = await User.findOne({where: {email}})
+
+        //verifica se existe o usuario
+        if(!user){
+            return res.status(400).send({error: 'User not found'})
+        }
+
+        //verifica se o token está correto
+        if(token !== user.passwordResetToken){
+            return res.status(400).send({error: 'Invalid Token'})
+        }
+
+        //verifica a validade do token
+        const now = new Date()
+        if(now> user.passwordResetExpires){
+            return res.status(400).send({error: 'Expired Token, try generating another'})
+        }
+
+        user.password = password
+        await user.save()
+        
+        res.send();
+
+    }catch(err){
+        
+        res.status(400).send({error: 'Cannot reset password, try again'})
+    }
+})
 module.exports = app => app.use('/auth', router)
