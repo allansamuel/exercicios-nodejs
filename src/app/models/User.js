@@ -17,7 +17,20 @@ const modelDefinition = {
         type: Sequelize.STRING,
         allowNull: false,
         select: false
-    }
+    },
+    email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
+    passwordResetToken: {
+        type: Sequelize.STRING,
+        select: false
+    },
+    passwordResetExpires: {
+        type: Sequelize.DATE,
+        select: false
+    },
+
 }
     
 const modelOptions = {

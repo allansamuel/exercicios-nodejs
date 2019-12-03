@@ -4,6 +4,9 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const config = require('../../config')
 
+const crypto = require('crypto')
+const mailer = require('../../modules/mailer')
+
 const router = express.Router()
 
 //função que gera o token, tanto no signin, quanto signup
@@ -59,6 +62,50 @@ router.post('/authenticate', async (req,res) => {
         user, 
         token: generateToken({id: user.id})
     })
+})
+
+router.post('/forgot_password', async (req, res) => {
+    const {email} = req.body.user
+
+    try{
+
+       const user = await User.findOne({where: {email: email}}) 
+
+       if(!user){
+           return res.status(400).send({error: 'User not found'})
+       }
+
+       //token que será utilizado para que o usuário, ao receber o email, possa usar pra ter ou não acesso à mudança de senha
+       const token = crypto.randomBytes(20).toString('hex')
+
+       //data de expiração do token. Agora + 1h
+       const now = new Date();
+       now.setHours(now.getHours()+1)
+       
+       await User.update({
+           passwordResetToken: token,
+           passwordResetExpires: now,},
+           {where: {id: user.id}}
+        );
+
+       mailer.sendMail({
+           to: email,
+           from: 'allansamuelg@gmail.com',
+           template: '/forgot_password',
+           context: {token},
+       }, (err) => {
+           if(err){
+                console.log(err)
+               return res.status(400).send({error: 'Can\'t send forgot password email'})
+           }
+           return res.send()
+       })
+
+       
+    }catch(err){
+        console.log(err)
+        res.status(400).send({error: 'Failed on forgot password, try again'})
+    }
 })
 
 module.exports = app => app.use('/auth', router)
