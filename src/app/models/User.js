@@ -3,8 +3,8 @@
 const Sequelize = require('sequelize'),
       bcrypt = require('bcryptjs')
 
-const config = require('../config'),
-      db = require('../services/database')
+const config = require('../../config'),
+      db = require('../../services/database')
 
 
 const modelDefinition = {

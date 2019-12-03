@@ -19,10 +19,9 @@ hookJWTStrategy(passport)
 
 /* app.use(express.static(__dirname + '../../public')); */
 
-require('./controllers/authController')(app)
-require('./controllers/projectController')(app)
+require('./app/controllers/index')(app)
  
 
 app.listen('4000', () =>{
-    console.log('Started')
+    console.log('Started') 
 })
