@@ -57,7 +57,7 @@ router.post('/authenticate', async (req,res) => {
         return res.status(400).send({error: 'Invalid password'})
 
     user.password = undefined
-
+    req.headers.authorization = generateToken({id: user.id})
     return res.send({
         user, 
         token: generateToken({id: user.id})

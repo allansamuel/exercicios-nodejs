@@ -1,7 +1,7 @@
 'use strict'
 
 const Sequelize = require('sequelize')
-
+const Analista = require('./Analista')
 const config = require('../../config'),
       db = require('../../services/database')
 
@@ -22,7 +22,8 @@ const modelDefinition = {
         type: Sequelize.STRING,
     },
     agente: {
-        type: Sequelize.STRING,
+        type: Analista,
+        ref: 'analista'
     },
     tempo_fila: {
         type: Sequelize.INTEGER,

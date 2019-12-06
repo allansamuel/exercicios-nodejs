@@ -18,8 +18,8 @@ module.exports = (req,res,next) => {
             console.log(err)
             return res.status(401).send({error: 'Token invalid'})
         }
+        
         res.userId = decoded.id
-
         return next()
     })
 }
