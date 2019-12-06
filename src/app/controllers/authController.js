@@ -104,7 +104,7 @@ router.post('/forgot_password', async (req, res) => {
 
        
     }catch(err){
-        console.log(err)
+        
         res.status(400).send({error: 'Failed on forgot password, try again'})
     }
 })

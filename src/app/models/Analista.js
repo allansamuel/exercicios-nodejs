@@ -14,7 +14,21 @@ const config = require('../../config'),
 */
 
 const modelDefinition = {
+    /* id:{
+        primaryKey: true,
+        type: Sequelize.INTEGER,
+        select: false,
+    }, */
+    /* createdAt:{
+        type: Sequelize.STRING,
+        select: false,
+    },
+    updatedAt:{
+        type: Sequelize.STRING,
+        select: false, 
+    }, */
     agente: {
+        primaryKey: true,
         type: Sequelize.STRING,
         allowNull: false,
     },
@@ -41,6 +55,6 @@ const modelDefinition = {
     }
 } */
 
-const AnalistaModel = db.define('analista', modelDefinition);
+const AnalistaModel = db.define('analista', modelDefinition, { timestamps: false });
 
 module.exports = AnalistaModel

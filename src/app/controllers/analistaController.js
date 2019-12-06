@@ -18,7 +18,19 @@ router.get('/:id_analista', async (req,res) => {
 
 //cadastra
 router.post('/', async (req,res) => {
-    res.send({user: res.userId})
+    try{
+        if(await Analista.findOne({
+            where: {
+                agente: req.body.analista.agente
+            }
+        })){
+            return res.status(400).send({error: 'User already exists'})
+        }
+        const analista = await Analista.create(req.body.analista)
+        return res.send({analista})
+    }catch(err) {
+        return res.status(400).send({error: 'Error on creating new project'})
+    }
 })
 
 //edita
