@@ -8,4 +8,4 @@ router.get('/', (req,res) => {
     res.send({ok: true, user: res.userId})
 })
 
-module.exports = app => app.use('/projects', router)
+module.exports = app => app.use('/agentes', router)
