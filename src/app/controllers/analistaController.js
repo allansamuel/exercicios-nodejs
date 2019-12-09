@@ -1,20 +1,39 @@
 const express = require('express')
 const authMiddleware = require('../middleware/auth')
 const router = express.Router()
-
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op;
 const Analista = require('../models/Analista')
 
 router.use(authMiddleware)
 
 //exibe todos
 router.get('/', async (req,res) => {
-    res.send({user: res.userId})
+    try{
+        const analistas = await Analista.findAll() /* .populate('user') */
+        if(!analistas){
+            return res.status(400).send({error: 'Analista não cadastrado'})    
+        }
+        res.send({analistas})
+    }catch (err) {
+        
+        return res.status(400).send({error: 'Erro ao buscar analistas'})
+    }
 })
 
-//exibe 1
-router.get('/:id_analista', async (req,res) => {
-    res.send({user: res.userId})
-})
+//exibe por nome
+router.get('/:agente', async (req,res) => {
+    try{
+        const analistas = await Analista.findAll({where: {agente: {[Op.like]: req.params.agente+'%'}}})
+        if(!analistas){
+            return res.status(400).send({error: 'Analista não cadastrado'})    
+        }
+        res.send({analistas})
+    }catch (err) {
+        console.log(err)
+        return res.status(400).send({error: 'Erro ao buscar analistas'})
+    }
+}) 
 
 //cadastra
 router.post('/', async (req,res) => {
@@ -24,23 +43,38 @@ router.post('/', async (req,res) => {
                 agente: req.body.analista.agente
             }
         })){
-            return res.status(400).send({error: 'User already exists'})
+            return res.status(400).send({error: 'Analista já cadastrado'})
         }
         const analista = await Analista.create(req.body.analista)
         return res.send({analista})
     }catch(err) {
-        return res.status(400).send({error: 'Error on creating new project'})
+        return res.status(400).send({error: 'Erro ao cadastrar analista'})
+    }
+})
+ 
+//edita
+router.put('/:agente', async (req,res) => {
+    try{
+        await Analista.update(req.body.analista,{where: {agente: {[Op.like]: req.params.agente}}})
+        
+        return res.send()
+    }catch (err) {
+        console.log(err)
+        return res.status(400).send({error: 'Erro ao atualizar analista'})
     }
 })
 
-//edita
-router.put('/:id_analista', (req,res) => {
-    res.send({user: res.userId})
-})
-
 //deleta
-router.delete('/:id_analista', async (req,res) => {
-    res.send({user: res.userId})
+router.delete('/:agente', async (req,res) => {
+    try{
+        
+        await Analista.destroy({where: {agente: {[Op.like]: req.params.agente+'%'}}})
+    
+        return res.send()
+    }catch (err) {
+        console.log(err)
+        return res.status(400).send({error: 'Erro ao desvincular analista'})
+    }
 })
 
 module.exports = app => app.use('/analista', router)
